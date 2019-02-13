@@ -1,7 +1,7 @@
 <template>
   <div>
       <Header/>
-      <RobotFilter :robots="filteredRobots" @filterApp="filter($event)"/>
+      <RobotFilter :robots="filteredRobots"/>
       <RobotList :robots="filteredRobots"/>
   </div>
 </template>
@@ -10,25 +10,22 @@
 import Header from './components/Header.vue'
 import RobotFilter from './components/RobotFilter.vue'
 import RobotList from './components/RobotList.vue'
-import axios from 'axios'
 
 export default {
   name: 'app',
   data(){
     return {
-      allRobots: [],
-      filteredRobots: []
+      
     }
   },
-  methods: {
-    filter(type){
-      console.log("App", type)
-      if(type){
-        this.filteredRobots = this.allRobots.filter(robot => robot.gender === type)
-      }
-      else {
-        this.filteredRobots = this.allRobots
-      }
+  computed: {
+    //ce qui était avant dans les data de App.vue est maintenant dans le state,
+    //on va chercher les valeurs du state, on les rend dispo via des computed properties
+    allRobots(){
+      return this.$store.state.allRobots
+    },
+    filteredRobots(){
+      return this.$store.getters.filteredRobots
     }
   },
   components: {
@@ -37,12 +34,8 @@ export default {
     RobotList
   },
   created(){
-    axios.get("https://wt-902485dbb4fca4fccee3a0efcde5b34c-0.sandbox.auth0-extend.com/robots")
-    .then(response => {
-        this.allRobots = response.data;
-        this.filteredRobots = this.allRobots;
-        console.log(this.allRobots)
-    })
+    //pour lancer l'appel ajax qui est maintenant dans le store
+    this.$store.dispatch('getRobots')
   }
 }
 </script>

@@ -10,8 +10,9 @@
 export default {
     methods:{
         filter(type){
-            console.log(type)
-            this.$emit('filterRobots', type)
+            //ici au lieu de faire remonter l'info vers App.vue avec des $emit,
+            //on change la valeur du filtre qui est dans le store
+            this.$store.commit('updateFilter', type)
         }
     }
 }
